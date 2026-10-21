@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atrapa el cuadrado</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #101827;
+  color: white;
+  text-align: center;
+}
+
+h1 {
+  color: #55e6a5;
+  margin-top: 30px;
+}
+
+.info {
+  display: flex;
+  justify-content: center;
+  gap: 35px;
+  font-size: 20px;
+  margin: 20px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 22px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+#start {
+  background: #55e6a5;
+  color: #101827;
+}
+
+#arena {
+  position: relative;
+  width: 90%;
+  max-width: 600px;
+  height: 350px;
+  margin: 25px auto;
+  background: #202d42;
+  border: 2px solid #34445d;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+#square {
+  display: none;
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  background: #ff5b78;
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 0 18px #ff5b7866;
+}
+
+#message {
+  color: #c6d2e4;
+  padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🎮 Atrapa el cuadrado</h1>
+<p>¡Pulsa el cuadrado tantas veces como puedas!</p>
+
+<div class="info">
+  <div>Puntos: <span id="score">0</span></div>
+  <div>Tiempo: <span id="time">20</span>s</div>
+</div>
+
+<button id="start" onclick="startGame()">
+  Empezar partida
+</button>
+
+<div id="arena">
+  <div id="square" onclick="hitSquare()"></div>
+</div>
+
+<p id="message">Pulsa empezar para jugar.</p>
+
+<script>
+let score = 0;
+let time = 20;
+let playing = false;
+let timer;
+
+const square = document.getElementById("square");
+const arena = document.getElementById("arena");
+
+function moveSquare() {
+  const maxX = arena.clientWidth - square.offsetWidth;
+  const maxY = arena.clientHeight - square.offsetHeight;
+
+  square.style.left = Math.random() * maxX + "px";
+  square.style.top = Math.random() * maxY + "px";
+}
+
+function startGame() {
+  clearInterval(timer);
+
+  score = 0;
+  time = 20;
+  playing = true;
+
+  document.getElementById("score").textContent = score;
+  document.getElementById("time").textContent = time;
+  document.getElementById("message").textContent =
+    "¡A por tu récord!";
+  document.getElementById("start").textContent = "Reiniciar";
+
+  square.style.display = "block";
+  moveSquare();
+
+  timer = setInterval(function() {
+    time--;
+    document.getElementById("time").textContent = time;
+
+    if (time <= 0) {
+      clearInterval(timer);
+      playing = false;
+      square.style.display = "none";
+
+      document.getElementById("message").textContent =
+        "¡Partida terminada! Has conseguido " +
+        score + " puntos.";
+      document.getElementById("start").textContent =
+        "Jugar otra vez";
+    }
+  }, 1000);
+}
+
+function hitSquare() {
+  if (!playing) return;
+
+  score++;
+  document.getElementById("score").textContent = score;
+  moveSquare();
+}
+</script>
+
+</body>
+</html>
